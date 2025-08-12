@@ -6,14 +6,14 @@
 <title>나의 커피 기록장 5.0 — 기록 중심 뷰 & 모달 입력</title>
 <style>
 :root{
-  --bg:#0b0c10; --panel:#111217; --ink:#e6e8ec; --muted:#aab0bb; --line:#242831;
+  --bg:#0e1117; --panel:#141926; --ink:#e9eef6; --muted:#a5b1c2; --line:#242b3a;
   --accent:#73e7ff; --accent2:#a7a6ff; --ok:#82f7a0; --warn:#ffd073; --danger:#ff7b7b;
 }
 *{box-sizing:border-box}
 html,body{height:100%}
-body{margin:0; background:linear-gradient(180deg,#0b0c10,#090a0d 70%); color:var(--ink); font-family: ui-sans-serif, -apple-system, "Apple SD Gothic Neo","Noto Sans KR",Segoe UI, Roboto, Helvetica, Arial}
+body{margin:0; background:linear-gradient(180deg,#0e1117,#0b0e15 70%); color:var(--ink); font-family: ui-sans-serif, -apple-system, "Apple SD Gothic Neo","Noto Sans KR",Segoe UI, Roboto, Helvetica, Arial}
 .app{display:flex; height:100%}
-.sidebar{width:320px; min-width:280px; border-right:1px solid var(--line); display:flex; flex-direction:column; background:linear-gradient(180deg,#0f1116,#0e1014)}
+.sidebar{width:320px; min-width:280px; border-right:1px solid var(--line); display:flex; flex-direction:column; background:linear-gradient(180deg,#121625,#0f1420)}
 .brand{display:flex; align-items:center; gap:10px; padding:16px; border-bottom:1px solid var(--line)}
 .logo{width:28px;height:28px;border-radius:8px;background:
   radial-gradient(circle at 30% 30%,var(--accent),transparent 60%),
@@ -24,7 +24,7 @@ body{margin:0; background:linear-gradient(180deg,#0b0c10,#090a0d 70%); color:var
 .sec{padding:10px 12px}
 .search input{width:100%; padding:10px 12px; border-radius:10px; border:1px solid var(--line); background:#0f1420; color:var(--ink); outline:none}
 .list{flex:1; overflow:auto; padding:8px 10px 100px}
-.item{padding:12px;border:1px solid var(--line);background:#0e1015;border-radius:12px;margin:8px 4px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:10px;transition:.12s}
+.item{padding:12px;border:1px solid var(--line);background:#0f1420;border-radius:12px;margin:8px 4px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:10px;transition:.12s}
 .item:hover{transform:translateY(-1px);border-color:#2b3348}
 .item.active{border-color:var(--accent); box-shadow:0 0 0 1px rgba(115,231,255,.25) inset}
 .item .name{font-weight:700}
@@ -36,14 +36,14 @@ body{margin:0; background:linear-gradient(180deg,#0b0c10,#090a0d 70%); color:var
 .btn.small{font-size:12px; padding:6px 8px; border-radius:8px}
 .btn.warn{background:#2a2314; border-color:#3f3420; color:#ffeec3}
 .btn.danger{background:#2a1418; border-color:#3d2026; color:#ffd7dc}
-.main{flex:1; display:flex; flex-direction:column; min-width:0; background:linear-gradient(180deg,#0d0e12,#0b0c10);}
+.main{flex:1; display:flex; flex-direction:column; min-width:0}
 .top{display:flex; flex-wrap:wrap; align-items:center; gap:10px; padding:14px 16px; border-bottom:1px solid var(--line)}
 .pill{display:inline-flex; gap:8px; align-items:center; padding:6px 10px; border:1px solid var(--line); border-radius:999px; font-size:12px; background:#0f1520}
 .dot{width:8px;height:8px;border-radius:50%;background:var(--accent)}
 .crumb{font-size:13px;color:var(--muted)}
 .crumb b{color:var(--ink)}
 .entries{padding:14px; overflow:auto}
-.entry{border:1px solid var(--line); background:linear-gradient(180deg,#0f1115,#0c0e12); border-radius:14px; margin:10px 0; padding:12px}
+.entry{border:1px solid var(--line); background:linear-gradient(180deg,#121827,#0e1422); border-radius:14px; margin:10px 0; padding:12px}
 .entry .row{display:grid; grid-template-columns:repeat(6,1fr); gap:8px}
 .entry .row + .row{margin-top:8px}
 .entry .row > div{min-width:0}
@@ -81,15 +81,17 @@ textarea{min-height:76px; resize:vertical}
 
 
 .gradwrap{display:flex;align-items:center;gap:10px;margin-top:8px}
-.gradbar{flex:1;height:12px;border-radius:6px;background:#1a1c22;border:1px solid #2a2d36}
+.gradbar{flex:1;height:6px;border-radius:6px;background:#1a1c22;border:1px solid #2a2d36}
 .gradnotes{font-style:italic;color:#cfd5e0;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
-
-.flag{width:22px;min-width:22px;height:22px;display:flex;align-items:center;justify-content:center;border-radius:4px;background:#1a1c22;border:1px solid #2a2d36;font-size:14px}
-.item .left{display:flex;align-items:center;gap:10px;flex:1;min-width:0}
-.item .texts{display:flex;flex-direction:column;min-width:0}
-
 </style>
+
+<style>
+#diagBanner{position:fixed;left:0;right:0;top:0;z-index:99999;background:#2a1418;color:#ffd7dc;
+  border-bottom:1px solid #3d2026;padding:8px 12px;font-size:12px;font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;display:none}
+#diagBanner b{color:#fff}
+</style>
+<div id="diagBanner"></div>
 </head>
 <body>
 <div class="app">
@@ -201,16 +203,7 @@ textarea{min-height:76px; resize:vertical}
       <div><label>로스팅 일자</label><input id="roastDate" type="date"></div>
       <div><label>로스팅 경과</label><div id="roastAge" class="badge"><span class="d">D+?</span><span>로스팅일 입력 필요</span></div></div>
       <div><label>해발 (m)</label><input id="altitude" type="number" min="0" placeholder="예: 1850"></div>
-    
-    <div style="grid-column:1/-1">
-      <label>대표 노트 (커피 전체, 1~3개 / 클릭 순서대로 그라데이션)</label>
-      <div id="coffeeNotePicker" class="chips"></div>
-      <div class="gradwrap" style="margin-top:10px">
-        <div class="gradbar coffee" id="coffeeGradBar"></div>
-        <div class="gradnotes" id="coffeeGradNotes"></div>
-      </div>
     </div>
-</div>
     <div class="footer">
       <button class="btn" id="saveBasics">저장</button>
     </div>
@@ -251,6 +244,9 @@ textarea{min-height:76px; resize:vertical}
 
 <script>
 (()=>{
+  try{
+    const __diag = document.getElementById('diagBanner'); if(__diag){ __diag.style.display='block'; __diag.textContent='Initializing…'; }
+
   const $ = s=>document.querySelector(s);
   const $$ = s=>Array.from(document.querySelectorAll(s));
   const uid = ()=> Math.random().toString(36).slice(2,9);
@@ -261,55 +257,13 @@ textarea{min-height:76px; resize:vertical}
   };
   let syncHandle = null;
 
-  const COUNTRY_TO_ISO = {
-    'ethiopia':'ET','kenya':'KE','colombia':'CO','brazil':'BR','guatemala':'GT','costa rica':'CR',
-    'el salvador':'SV','honduras':'HN','nicaragua':'NI','panama':'PA','mexico':'MX','peru':'PE',
-    'bolivia':'BO','rwanda':'RW','burundi':'BI','tanzania':'TZ','yemen':'YE','indonesia':'ID',
-    'vietnam':'VN','thailand':'TH','china':'CN','taiwan':'TW','japan':'JP'
-  };
-  function flagEmoji(country){
-    if(!country) return '';
-    const k = country.trim().toLowerCase();
-    const iso = COUNTRY_TO_ISO[k] || (k.length===2 ? k.toUpperCase() : null);
-    if(!iso) return '';
-    return String.fromCodePoint(...[...iso].map(c=>0x1F1E6 + (c.charCodeAt(0)-65)));
-  }
-
-
   // --- Note colors & picker helpers ---
-  
-const NOTE_COLORS = {
-  // Floral
-  'floral':'#c9a0ff','jasmine':'#b59cff','rose':'#d7263d','honeysuckle':'#f7c7ff','lavender':'#b499ff',
-  // Fruity - Citrus
-  'citrus':'#ffd166','lemon':'#ffe66d','lime':'#caff70','orange':'#ffb347','grapefruit':'#ff9f80','bergamot':'#a6c8ff',
-  // Fruity - Berry
-  'berry':'#c86bfa','strawberry':'#ff7ea8','raspberry':'#ff4f87','blueberry':'#6a8dff','blackberry':'#6f3aa4',
-  // Fruity - Dried
-  'dried fruit':'#c48a63','raisin':'#a26b3b','prune':'#6b3a2a','date':'#7a3e2b',
-  // Fruity - Other
-  'apple':'#ffd1a8','pear':'#f2e2a0','grape':'#a66bbe','peach':'#ffb3c1','white peach':'#ffd1dc','apricot':'#ffb07c',
-  // Fruity - Tropical
-  'tropical fruit':'#ffd86b','mango':'#ffcf5a','pineapple':'#ffe17a','passion fruit':'#ffb36b','papaya':'#ffa65c',
-  // Sweet
-  'sweet':'#ffd8a8','honey':'#ffd27f','brown sugar':'#c68e5e','molasses':'#5a3e2b','caramel':'#c68e5e','vanilla':'#f3e5ab',
-  // Cocoa/Nutty
-  'cocoa':'#6b4c3b','chocolate':'#5a3e2b','dark chocolate':'#3e2a1f','nutty':'#b58b59','almond':'#c3a07b','hazelnut':'#b98b60','peanut':'#caa26a',
-  // Spices
-  'spice':'#c57b57','cinnamon':'#c06c51','clove':'#8b4a3a','cardamom':'#c0b283','black pepper':'#4b4b4b','ginger':'#e0a96d',
-  // Green/Vegetative
-  'green':'#7bb661','herbal':'#7fc97f','fresh':'#55a868','mint':'#7cd992','rosemary':'#4f8b6f',
-  // Roasted
-  'roasted':'#7a5b3a','smoky':'#4d3b2a','ash':'#5a5a5a','burnt sugar':'#8b4513',
-  // Brown-sugar / sugar cane
-  'sugar cane':'#d4b483',
-  // Fermented / Winey
-  'winey':'#7f2a5a','red wine':'#8a2740',
-  // Other common
-  'black tea':'#9c6a3a','tea-like':'#a68064'
-};
-const NOTE_LIST = Object.keys(NOTE_COLORS);
-
+  const NOTE_COLORS = {
+    'peach':'#ffb3c1','white peach':'#ffd1dc','rose':'#d7263d','jasmine':'#b59cff','bergamot':'#a6c8ff',
+    'citrus':'#ffd166','lemon':'#ffe66d','lime':'#caff70','grape':'#a66bbe','black tea':'#9c6a3a',
+    'floral':'#c9a0ff','cherry':'#ff6b6b','strawberry':'#ff7ea8','blueberry':'#6a8dff','chocolate':'#5a3e2b',
+    'honey':'#ffd27f','caramel':'#c68e5e','nutty':'#b58b59','apple':'#ffd1a8','pear':'#f2e2a0'
+  };
   const NOTE_LIST = Object.keys(NOTE_COLORS);
 
   function gradientFromNotes(arr){
@@ -479,42 +433,10 @@ const NOTE_LIST = Object.keys(NOTE_COLORS);
     $('#variety').value = c.variety||'';
     $('#process').value = c.process||'';
     $('#altitude').value = c.altitude||'';
-    renderCoffeeNotePicker(c.coffeeNotesSelected||[]); updateCoffeeGradPreview(c.coffeeNotesSelected||[]);
     $('#roastDate').value = c.roastDate||'';
     renderRoastAge(c);
     $('#basicsModal').style.display='flex';
   }
-  
-  function renderCoffeeNotePicker(selected=[]){
-    const box = $('#coffeeNotePicker'); if(!box) return;
-    box.innerHTML='';
-    NOTE_LIST.forEach(n=>{
-      const b = document.createElement('button');
-      b.type='button'; b.className='chip'+(selected.includes(n)?' selected':'');
-      b.textContent = n.replace(/\b\w/g, c=>c.toUpperCase());
-      b.dataset.note = n;
-      b.onclick = ()=>{
-        // preserve order of click selection
-        const cur = Array.from($('#coffeeNotePicker').querySelectorAll('.chip.selected'));
-        if(b.classList.contains('selected')){
-          b.classList.remove('selected');
-        }else{
-          if(cur.length>=3) return;
-          b.classList.add('selected');
-        }
-        const sel = Array.from($('#coffeeNotePicker').querySelectorAll('.chip.selected')).map(x=>x.dataset.note);
-        updateCoffeeGradPreview(sel);
-      };
-      box.appendChild(b);
-    });
-  }
-  function updateCoffeeGradPreview(sel){
-    const bar = $('#coffeeGradBar'), nt = $('#coffeeGradNotes');
-    const grad = gradientFromNotes(sel||[]);
-    if(bar) bar.style.background = grad || '#1a1c22';
-    if(nt) nt.textContent = (sel||[]).map(x=>x.replace(/\b\w/g,c=>c.toUpperCase())).join(', ');
-  }
-
   function renderRoastAge(c){
     const d = c?.roastDate; if(!d){ $('#roastAge').innerHTML='<span class="d">D+?</span><span>로스팅일 입력 필요</span>'; return; }
     $('#roastAge').innerHTML = `<span class="d">D+0</span><span>추출일 기준 배지는 기록 카드에 표시</span>`;
@@ -533,7 +455,6 @@ const NOTE_LIST = Object.keys(NOTE_COLORS);
     c.variety = $('#variety').value.trim();
     c.process = $('#process').value.trim();
     c.altitude = Number($('#altitude').value||0) || '';
-    c.coffeeNotesSelected = Array.from(($('#coffeeNotePicker')||document.createElement('div')).querySelectorAll('.chip.selected')).map(x=>x.dataset.note);
     c.roastDate = $('#roastDate').value;
     store.set(s); renderList($('#q').value||''); select(); closeBasicsModal();
   }
@@ -721,6 +642,18 @@ const NOTE_LIST = Object.keys(NOTE_COLORS);
   $('#loadFromSync').onclick = ()=> loadFromSync();
   // Init
   renderList(); select();
-})();</script>
+  }catch(e){
+    const __diag = document.getElementById('diagBanner');
+    if(__diag){ __diag.style.display='block'; __diag.innerHTML = '<b>Init error:</b> ' + (e && e.message ? e.message : e); }
+    console.error('Initialization error', e);
+  }
+})();
+
+// Global error catcher
+window.addEventListener('error', function(ev){
+  const __diag = document.getElementById('diagBanner');
+  if(__diag){ __diag.style.display='block'; __diag.innerHTML = '<b>Runtime error:</b> ' + (ev && ev.message ? ev.message : ev); }
+});
+</script>
 </body>
 </html>
