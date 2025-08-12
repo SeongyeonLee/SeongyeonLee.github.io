@@ -336,7 +336,6 @@ textarea{min-height:76px; resize:vertical}
     while(colors.length<3) colors.push(colors[colors.length-1]);
     return `linear-gradient(90deg, ${colors[0]}, ${colors[1]}, ${colors[2]})`;
   }
-
   function renderNotePicker(selected=[], el='coffeeNotePicker'){
     const box = document.getElementById(el); if(!box) return;
     box.innerHTML='';
