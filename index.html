@@ -695,6 +695,7 @@ textarea{min-height:76px; resize:vertical}
   $('#closeEntry').onclick = closeEntryModal;
   $('#basicsBtn').onclick = openBasicsModal;
   $('#closeBasics').onclick = closeBasicsModal;
+  $('#saveBasics').onclick = saveBasics;
   // Entry actions
   $('#calc').onclick = ()=>{
     const unit=parseInt($('#unit').value||'100',10), price=Number($('#price').value||0), dose=Number($('#dose').value||0);
