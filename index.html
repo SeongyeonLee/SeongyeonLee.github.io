@@ -30,9 +30,10 @@ body{margin:0; background:linear-gradient(180deg,#2b2b2b,#1e1e1e 70%); color:var
 .item.active{border-color:var(--accent); box-shadow:0 0 0 1px rgba(115,231,255,.25) inset}
 .item .name{font-weight:700}
 .item .meta{font-size:12px;color:var(--muted)}
-.actions{position:sticky; bottom:0; padding:10px; border-top:1px solid var(--line); background:linear-gradient(180deg,#0f1420,#0c1018)}
+.actions{position:sticky; bottom:0; padding:12px; border-top:1px solid var(--line); background:linear-gradient(180deg,#0f1420,#0c1018); display:flex; flex-direction:column; gap:8px}
 .btn{background:#4b4b4b; color:var(--ink); border:1px solid var(--line); padding:9px 12px; border-radius:10px; cursor:pointer; font-size:13px}
 .btn + .btn{margin-left:6px}
+.actions .btn{width:100%; margin-left:0}
 .btn.accent{background:linear-gradient(180deg,#5c5c5c,#4b4b4b);border-color:#666; color:#fff}
 .btn.small{font-size:12px; padding:6px 8px; border-radius:8px}
 .btn.warn{background:#2a2314; border-color:#3f3420; color:#ffeec3}
@@ -58,10 +59,10 @@ body{margin:0; background:linear-gradient(180deg,#2b2b2b,#1e1e1e 70%); color:var
 .filterbar{display:flex; align-items:center; gap:8px; padding:8px 16px; flex-wrap:wrap; border-bottom:1px solid var(--line)}
 .right{text-align:right}
 .tools{display:flex; gap:6px; flex-wrap:wrap}
-.fab{position:fixed; right:16px; bottom:16px; display:flex; gap:8px}
+.fab{position:fixed; right:16px; bottom:24px; display:flex; flex-direction:column; gap:12px}
 .fab .btn{box-shadow:0 8px 20px rgba(0,0,0,.3)}
 /* Modal */
-.modal{position:fixed; inset:0; background:rgba(0,0,0,.55); display:none; align-items:flex-end; justify-content:center}
+.modal{position:fixed; inset:0; background:rgba(0,0,0,.55); display:none; align-items:flex-end; justify-content:center; z-index:1000}
 .modal .box{background:#0f1420; border:1px solid var(--line); border-radius:16px 16px 0 0; width:100%; max-width:980px; max-height:85vh; overflow:auto; padding:16px}
 .modal h3{margin:0 0 10px 0; font-size:15px}
 .grid{display:grid; gap:12px; grid-template-columns:1fr 1fr}
@@ -119,7 +120,7 @@ textarea{min-height:76px; resize:vertical}
       <button class="btn accent" id="addCoffee">+ 커피 추가</button>
       <button class="btn small" id="rename">이름 수정</button>
       <button class="btn small" id="basicsBtn">기본정보</button>
-      <button class="btn small danger" id="remove">삭제</button><br>
+      <button class="btn small danger" id="remove">삭제</button>
       <button class="btn small" id="exportBtn">내보내기</button>
       <button class="btn small" id="importBtn">가져오기</button>
       <input id="importFile" type="file" accept=".json" style="display:none">
@@ -184,7 +185,6 @@ textarea{min-height:76px; resize:vertical}
       <div><label>한줄평</label><input id="one" type="text" placeholder="예: 산뜻한 산미, 깨끗한 여운"></div>
       <div><label>TDS (%)</label><input id="tds" type="number" step="0.01" min="0" max="20" placeholder="예: 1.35"></div>
       <div><label>완성 음료량 (ml)</label><input id="bev" type="number" min="0" placeholder="예: 250"></div>
-      <div style="grid-column:1/-1"><label>대표 노트 선택 (1~3개)</label><div id="entryNotePicker" class="chips"></div></div>
 
     </div>
     <div class="footer" style="justify-content:space-between">
@@ -336,8 +336,7 @@ textarea{min-height:76px; resize:vertical}
     while(colors.length<3) colors.push(colors[colors.length-1]);
     return `linear-gradient(90deg, ${colors[0]}, ${colors[1]}, ${colors[2]})`;
   }
-
-  function renderNotePicker(selected=[], el='entryNotePicker'){
+  function renderNotePicker(selected=[], el='coffeeNotePicker'){
     const box = document.getElementById(el); if(!box) return;
     box.innerHTML='';
     NOTE_LIST.forEach(n=>{
@@ -472,7 +471,6 @@ textarea{min-height:76px; resize:vertical}
       $('#tds').value = (entry.tds!=null? entry.tds : '');
       $('#bev').value = (entry.beverage!=null? entry.beverage : '');
       $('#iced').checked = !!entry.iced;
-      renderNotePicker(entry.selectedNotes||[], 'entryNotePicker');
       $('#one').value = entry.oneLiner||'';
       $('#add').dataset.edit = entry.id;
       $('#add').textContent = '기록 업데이트';
@@ -480,7 +478,6 @@ textarea{min-height:76px; resize:vertical}
       $('#date').value = new Date().toISOString().slice(0,10);
       $('#method').value=''; $('#unit').value='100'; $('#price').value=''; $('#dose').value='16';
       $('#water').value='250'; $('#temp').value='93'; $('#iced').checked=false; $('#recipe').value=''; $('#notes').value=''; $('#one').value='';
-      renderNotePicker([], 'entryNotePicker');
       delete $('#add').dataset.edit; $('#add').textContent='기록 저장';
     }
     calcCost();
@@ -571,8 +568,7 @@ textarea{min-height:76px; resize:vertical}
       notes: $('#notes').value||'',
       oneLiner: $('#one').value||'',
       tds: Number($('#tds').value||0) || null,
-      beverage: Number($('#bev').value||0) || null,
-      selectedNotes: Array.from(($('#entryNotePicker')||document.createElement('div')).querySelectorAll('.chip.selected')).map(x=>x.dataset.note)
+      beverage: Number($('#bev').value||0) || null
     };
     if(e.tds!=null && e.beverage!=null && e.dose){ e.ey = Math.round((e.tds * e.beverage / e.dose)*10)/10; }
     e.costPerBrew = e.price && e.unit ? Math.round((e.price/e.unit)*e.dose) : 0;
