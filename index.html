@@ -5,15 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>나의 커피 기록장 5.0 — 기록 중심 뷰 & 모달 입력</title>
 <style>
+/* 기본 색상을 그레이 톤으로 조정 */
 :root{
-  --bg:#0e1117; --panel:#141926; --ink:#e9eef6; --muted:#a5b1c2; --line:#242b3a;
-  --accent:#73e7ff; --accent2:#a7a6ff; --ok:#82f7a0; --warn:#ffd073; --danger:#ff7b7b;
+  --bg:#2b2b2b; --panel:#3a3a3a; --ink:#f2f2f2; --muted:#a6a6a6; --line:#4a4a4a;
+  --accent:#8c8c8c; --accent2:#b5b5b5; --ok:#82f7a0; --warn:#ffd073; --danger:#ff7b7b;
 }
 *{box-sizing:border-box}
 html,body{height:100%}
-body{margin:0; background:linear-gradient(180deg,#0e1117,#0b0e15 70%); color:var(--ink); font-family: ui-sans-serif, -apple-system, "Apple SD Gothic Neo","Noto Sans KR",Segoe UI, Roboto, Helvetica, Arial}
+body{margin:0; background:linear-gradient(180deg,#2b2b2b,#1e1e1e 70%); color:var(--ink); font-family: ui-sans-serif, -apple-system, "Apple SD Gothic Neo","Noto Sans KR",Segoe UI, Roboto, Helvetica, Arial}
 .app{display:flex; height:100%}
-.sidebar{width:320px; min-width:280px; border-right:1px solid var(--line); display:flex; flex-direction:column; background:linear-gradient(180deg,#121625,#0f1420)}
+.sidebar{width:320px; min-width:280px; border-right:1px solid var(--line); display:flex; flex-direction:column; background:linear-gradient(180deg,#3a3a3a,#2b2b2b)}
 .brand{display:flex; align-items:center; gap:10px; padding:16px; border-bottom:1px solid var(--line)}
 .logo{width:28px;height:28px;border-radius:8px;background:
   radial-gradient(circle at 30% 30%,var(--accent),transparent 60%),
@@ -30,30 +31,30 @@ body{margin:0; background:linear-gradient(180deg,#0e1117,#0b0e15 70%); color:var
 .item .name{font-weight:700}
 .item .meta{font-size:12px;color:var(--muted)}
 .actions{position:sticky; bottom:0; padding:10px; border-top:1px solid var(--line); background:linear-gradient(180deg,#0f1420,#0c1018)}
-.btn{background:#141b2a; color:var(--ink); border:1px solid var(--line); padding:9px 12px; border-radius:10px; cursor:pointer; font-size:13px}
+.btn{background:#4b4b4b; color:var(--ink); border:1px solid var(--line); padding:9px 12px; border-radius:10px; cursor:pointer; font-size:13px}
 .btn + .btn{margin-left:6px}
-.btn.accent{background:linear-gradient(180deg,#132235,#0f1726);border-color:#2a3a54; color:#dff7ff}
+.btn.accent{background:linear-gradient(180deg,#5c5c5c,#4b4b4b);border-color:#666; color:#fff}
 .btn.small{font-size:12px; padding:6px 8px; border-radius:8px}
 .btn.warn{background:#2a2314; border-color:#3f3420; color:#ffeec3}
 .btn.danger{background:#2a1418; border-color:#3d2026; color:#ffd7dc}
 .main{flex:1; display:flex; flex-direction:column; min-width:0}
 .top{display:flex; flex-wrap:wrap; align-items:center; gap:10px; padding:14px 16px; border-bottom:1px solid var(--line)}
-.pill{display:inline-flex; gap:8px; align-items:center; padding:6px 10px; border:1px solid var(--line); border-radius:999px; font-size:12px; background:#0f1520}
+.pill{display:inline-flex; gap:8px; align-items:center; padding:6px 10px; border:1px solid var(--line); border-radius:999px; font-size:12px; background:#2e2e2e}
 .dot{width:8px;height:8px;border-radius:50%;background:var(--accent)}
 .crumb{font-size:13px;color:var(--muted)}
 .crumb b{color:var(--ink)}
 .entries{padding:14px; overflow:auto}
-.entry{border:1px solid var(--line); background:linear-gradient(180deg,#121827,#0e1422); border-radius:14px; margin:10px 0; padding:12px}
+.entry{border:1px solid var(--line); background:linear-gradient(180deg,#2f2f2f,#242424); border-radius:14px; margin:10px 0; padding:12px}
 .entry .row{display:grid; grid-template-columns:repeat(6,1fr); gap:8px}
 .entry .row + .row{margin-top:8px}
 .entry .row > div{min-width:0}
 .meta{color:var(--muted); font-size:12px}
 .cost{color:#d8f9ff; font-weight:700}
 .empty{color:var(--muted); text-align:center; padding:20px}
-.tag{font-size:11px; color:#cfe7ff; border:1px solid #223448; padding:2px 6px; border-radius:10px}
-.statpill{display:inline-block; padding:3px 8px; border:1px solid #28405a; border-radius:999px; font-size:12px; color:#d7efff}
-.badge{display:inline-flex; align-items:center; gap:6px; padding:4px 8px; border-radius:999px; border:1px solid #24344a; background:#0f1824; font-size:12px; color:#cde8ff}
-.badge .d{font-weight:700; color:#bfe7ff}
+.tag{font-size:11px; color:#e0e0e0; border:1px solid #4a4a4a; padding:2px 6px; border-radius:10px}
+.statpill{display:inline-block; padding:3px 8px; border:1px solid #5a5a5a; border-radius:999px; font-size:12px; color:#e0e0e0}
+.badge{display:inline-flex; align-items:center; gap:6px; padding:4px 8px; border-radius:999px; border:1px solid #5a5a5a; background:#3a3a3a; font-size:12px; color:#f2f2f2}
+.badge .d{font-weight:700; color:#fff}
 .filterbar{display:flex; align-items:center; gap:8px; padding:8px 16px; flex-wrap:wrap; border-bottom:1px solid var(--line)}
 .right{text-align:right}
 .tools{display:flex; gap:6px; flex-wrap:wrap}
@@ -76,13 +77,23 @@ textarea{min-height:76px; resize:vertical}
 }
 
 .chips{display:flex;gap:6px;flex-wrap:wrap}
-.chip{padding:6px 10px;border:1px solid #2a2f3a;border-radius:999px;background:#0f1218;cursor:pointer;font-size:12px;color:#cfd5e0}
-.chip.selected{border-color:#3f7ce0; background:rgba(63,124,224,.15); color:#e8f0ff}
+.chip{padding:6px 10px;border:1px solid #4a4a4a;border-radius:999px;background:#2b2b2b;cursor:pointer;font-size:12px;color:#e0e0e0}
+.chip.selected{border-color:#aaa; background:rgba(200,200,200,.15); color:#fff}
 
 
 .gradwrap{display:flex;align-items:center;gap:10px;margin-top:8px}
-.gradbar{flex:1;height:6px;border-radius:6px;background:#1a1c22;border:1px solid #2a2d36}
+.gradbar{flex:1;height:6px;border-radius:6px;background:#1a1c22;border:1px solid #4a4a4a}
 .gradnotes{font-style:italic;color:#cfd5e0;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* 국기 아이콘 및 토글 스위치 스타일 */
+.flag{font-size:20px}
+.left{display:flex;align-items:center;gap:6px}
+.switch{position:relative;display:inline-block;width:40px;height:20px}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:#666;transition:.2s;border-radius:20px}
+.slider:before{position:absolute;content:"";height:14px;width:14px;left:3px;bottom:3px;background:white;transition:.2s;border-radius:50%}
+.switch input:checked + .slider{background:#aaa}
+.switch input:checked + .slider:before{transform:translateX(20px)}
 
 </style>
 
@@ -167,12 +178,13 @@ textarea{min-height:76px; resize:vertical}
       <div><label>1회 사용 원두량 (g)</label><input id="dose" type="number" min="1" value="16"></div>
       <div><label>추출 물량 (ml)</label><input id="water" type="number" min="1" value="250"></div>
       <div><label>물 온도 (℃)</label><input id="temp" type="number" min="70" max="100" value="93"></div>
+      <div><label>아이스 여부</label><label class="switch"><input id="iced" type="checkbox"><span class="slider"></span></label></div>
       <div style="grid-column:1/-1"><label>드립 레시피</label><textarea id="recipe" placeholder="예: 0:00 40g bloom, 0:30~1:00 100g, 1:10~1:45 110g, 총 2:25"></textarea></div>
       <div><label>컵 노트</label><textarea id="notes" placeholder="예: jasmine, black tea, white peach, citrus"></textarea></div>
       <div><label>한줄평</label><input id="one" type="text" placeholder="예: 산뜻한 산미, 깨끗한 여운"></div>
       <div><label>TDS (%)</label><input id="tds" type="number" step="0.01" min="0" max="20" placeholder="예: 1.35"></div>
       <div><label>완성 음료량 (ml)</label><input id="bev" type="number" min="0" placeholder="예: 250"></div>
-      <div style="grid-column:1/-1"><label>대표 노트 선택 (1~3개)</label><div id="notePicker" class="chips"></div></div>
+      <div style="grid-column:1/-1"><label>대표 노트 선택 (1~3개)</label><div id="entryNotePicker" class="chips"></div></div>
 
     </div>
     <div class="footer" style="justify-content:space-between">
@@ -203,6 +215,8 @@ textarea{min-height:76px; resize:vertical}
       <div><label>로스팅 일자</label><input id="roastDate" type="date"></div>
       <div><label>로스팅 경과</label><div id="roastAge" class="badge"><span class="d">D+?</span><span>로스팅일 입력 필요</span></div></div>
       <div><label>해발 (m)</label><input id="altitude" type="number" min="0" placeholder="예: 1850"></div>
+      <div style="grid-column:1/-1"><label>대표 노트 (1~3개)</label><div id="coffeeNotePicker" class="chips"></div></div>
+      <div style="grid-column:1/-1"><label>웹 정보</label><div id="autoInfo" class="meta"></div></div>
     </div>
     <div class="footer">
       <button class="btn" id="saveBasics">저장</button>
@@ -266,6 +280,55 @@ textarea{min-height:76px; resize:vertical}
   };
   const NOTE_LIST = Object.keys(NOTE_COLORS);
 
+  // 국가 코드 -> 국기 이모지 변환용
+  const COUNTRY_CODES = {
+    'ethiopia':'ET','에티오피아':'ET',
+    'kenya':'KE','케냐':'KE',
+    'colombia':'CO','콜롬비아':'CO',
+    'brazil':'BR','브라질':'BR',
+    'guatemala':'GT','과테말라':'GT',
+    'honduras':'HN','온두라스':'HN',
+    'panama':'PA','파나마':'PA',
+    'bolivia':'BO','볼리비아':'BO',
+    'peru':'PE','페루':'PE',
+    'costa':'CR','costa rica':'CR','코스타리카':'CR',
+    'nicaragua':'NI','니카라과':'NI',
+    'el':'SV','el salvador':'SV','엘살바도르':'SV',
+    'rwanda':'RW','르완다':'RW',
+    'burundi':'BI','부룬디':'BI',
+    'yemen':'YE','예멘':'YE',
+    'indonesia':'ID','인도네시아':'ID',
+    'china':'CN','중국':'CN',
+    'tanzania':'TZ','탄자니아':'TZ'
+  };
+  function flagEmoji(country){
+    if(!country) return '';
+    const code = COUNTRY_CODES[country.trim().toLowerCase()];
+    if(!code) return '';
+    return code.replace(/./g,c=>String.fromCodePoint(127397+c.charCodeAt(0)));
+  }
+
+  function detectCountryFromName(){
+    const first = ($('#name').value.trim().split(/\s+/)[0]||'').toLowerCase();
+    if(COUNTRY_CODES[first] && !$('#country').value){
+      $('#country').value = first.charAt(0).toUpperCase()+first.slice(1);
+    }
+  }
+
+  async function fetchInfo(){
+    const q = [$('#name').value, $('#variety').value, $('#process').value].filter(Boolean).join(' ');
+    if(!q){ $('#autoInfo').textContent=''; return; }
+    try{
+      const r = await fetch('https://en.wikipedia.org/api/rest_v1/page/summary/'+encodeURIComponent(q));
+      if(r.ok){
+        const j = await r.json();
+        $('#autoInfo').textContent = j.extract || '정보 없음';
+      }else{
+        $('#autoInfo').textContent = '정보 없음';
+      }
+    }catch(e){ $('#autoInfo').textContent = '불러오기 실패'; }
+  }
+
   function gradientFromNotes(arr){
     if(!arr || !arr.length) return '';
     const colors = arr.map(n=> NOTE_COLORS[n] ).filter(Boolean);
@@ -274,8 +337,8 @@ textarea{min-height:76px; resize:vertical}
     return `linear-gradient(90deg, ${colors[0]}, ${colors[1]}, ${colors[2]})`;
   }
 
-  function renderNotePicker(selected=[]){
-    const box = $('#notePicker'); if(!box) return;
+  function renderNotePicker(selected=[], el='entryNotePicker'){
+    const box = document.getElementById(el); if(!box) return;
     box.innerHTML='';
     NOTE_LIST.forEach(n=>{
       const b = document.createElement('button');
@@ -283,7 +346,7 @@ textarea{min-height:76px; resize:vertical}
       b.textContent = n.replace(/\b\w/g, c=>c.toUpperCase());
       b.dataset.note = n;
       b.onclick = ()=>{
-        const cur = Array.from($('#notePicker').querySelectorAll('.chip.selected')).map(x=>x.dataset.note);
+        const cur = Array.from(box.querySelectorAll('.chip.selected')).map(x=>x.dataset.note);
         if(b.classList.contains('selected')){ b.classList.remove('selected'); }
         else{ if(cur.length>=3) return; b.classList.add('selected'); }
       };
@@ -310,7 +373,7 @@ textarea{min-height:76px; resize:vertical}
       const used = (c.entries||[]).reduce((a,e)=>a+(e.dose||0),0);
       div.className='item'+(c.id===s.selectedId?' active':'');
       const v = c.variety ? ' · '+c.variety : '';
-      div.innerHTML = `<div class="left">${c.country ? `<div class="flag">${flagEmoji(c.country)}</div>` : ''}<div class="texts"><div class="name">${c.name||'이름 없음'}</div><div class="meta">${c.farmInfo||''}${v}</div><div class="gradwrap"><div class="gradbar" style="background:${(c.entries||[]).slice().sort((a,b)=> (b.date||'').localeCompare(a.date||''))[0]?.selectedNotes ? gradientFromNotes((c.entries||[]).slice().sort((a,b)=> (b.date||'').localeCompare(a.date||''))[0]?.selectedNotes) : '#1a1c22'}"></div><div class="gradnotes">${((c.entries||[]).slice().sort((a,b)=> (b.date||'').localeCompare(a.date||''))[0]?.selectedNotes||[]).map(x=>x.replace(/\b\w/g,c=>c.toUpperCase())).join(', ')}</div></div></div></div><div class="meta">${count}회 · 총 ${used}g</div>`;
+      div.innerHTML = `<div class="left">${c.country ? `<div class="flag">${flagEmoji(c.country)}</div>` : ''}<div class="texts"><div class="name">${c.name||'이름 없음'}</div><div class="meta">${c.farmInfo||''}${v}</div><div class="gradwrap"><div class="gradbar" style="background:${c.flavorNotes && c.flavorNotes.length ? gradientFromNotes(c.flavorNotes) : '#1a1c22'}"></div><div class="gradnotes">${(c.flavorNotes||[]).map(x=>x.replace(/\b\w/g,c=>c.toUpperCase())).join(', ')}</div></div></div></div><div class="meta">${count}회 · 총 ${used}g</div>`;
       div.onclick = ()=>{ s.selectedId=c.id; store.set(s); select(); };
       list.appendChild(div);
     });
@@ -348,7 +411,7 @@ textarea{min-height:76px; resize:vertical}
         <div style="display:flex;justify-content:space-between;align-items:center;gap:10px; flex-wrap:wrap">
           <div><span class="tag">${e.date||'날짜 없음'}</span> <b style="margin-left:6px">${c.name}</b> ${c.variety? `<span class="statpill">${c.variety}</span>`:''} ${e.method? `<span class="statpill">${e.method}</span>`:''}</div>
           <div class="right" style="display:flex; gap:10px; align-items:center; flex-wrap:wrap">
-            ${dBadge}
+            ${dBadge}${e.iced? '<span class="badge">ICE</span>' : '<span class="badge">HOT</span>'}
             <span class="meta">1회 비용 <span class="cost">${money(e.costPerBrew||0)}</span></span>${(e.ey!=null? `<span class="meta"> · EY ${e.ey}%</span>` : "")}
             <button class="btn small" data-edit="${e.id}">수정</button>
             <button class="btn small danger" data-del="${e.id}">삭제</button>
@@ -408,14 +471,16 @@ textarea{min-height:76px; resize:vertical}
       $('#notes').value = entry.notes||'';
       $('#tds').value = (entry.tds!=null? entry.tds : '');
       $('#bev').value = (entry.beverage!=null? entry.beverage : '');
-      renderNotePicker(entry.selectedNotes||[]);
+      $('#iced').checked = !!entry.iced;
+      renderNotePicker(entry.selectedNotes||[], 'entryNotePicker');
       $('#one').value = entry.oneLiner||'';
       $('#add').dataset.edit = entry.id;
       $('#add').textContent = '기록 업데이트';
     }else{
       $('#date').value = new Date().toISOString().slice(0,10);
       $('#method').value=''; $('#unit').value='100'; $('#price').value=''; $('#dose').value='16';
-      $('#water').value='250'; $('#temp').value='93'; $('#recipe').value=''; $('#notes').value=''; $('#one').value='';
+      $('#water').value='250'; $('#temp').value='93'; $('#iced').checked=false; $('#recipe').value=''; $('#notes').value=''; $('#one').value='';
+      renderNotePicker([], 'entryNotePicker');
       delete $('#add').dataset.edit; $('#add').textContent='기록 저장';
     }
     calcCost();
@@ -435,6 +500,9 @@ textarea{min-height:76px; resize:vertical}
     $('#altitude').value = c.altitude||'';
     $('#roastDate').value = c.roastDate||'';
     renderRoastAge(c);
+    renderNotePicker(c.flavorNotes||[], 'coffeeNotePicker');
+    detectCountryFromName();
+    fetchInfo();
     $('#basicsModal').style.display='flex';
   }
   function renderRoastAge(c){
@@ -456,12 +524,13 @@ textarea{min-height:76px; resize:vertical}
     c.process = $('#process').value.trim();
     c.altitude = Number($('#altitude').value||0) || '';
     c.roastDate = $('#roastDate').value;
+    c.flavorNotes = Array.from($('#coffeeNotePicker').querySelectorAll('.chip.selected')).map(x=>x.dataset.note);
     store.set(s); renderList($('#q').value||''); select(); closeBasicsModal();
   }
 
   function addCoffee(){
     const s = store.get();
-    const c = { id: uid(), createdAt: Date.now(), name:'새 커피', farmInfo:'', roaster:'', purchase:'', variety:'', process:'', roastDate:'', entries:[] };
+    const c = { id: uid(), createdAt: Date.now(), name:'새 커피', farmInfo:'', roaster:'', country:'', purchase:'', variety:'', process:'', roastDate:'', altitude:'', flavorNotes:[], entries:[] };
     s.coffees.push(c); s.selectedId = c.id; store.set(s); renderList(); select();
     openBasicsModal();
   }
@@ -497,12 +566,13 @@ textarea{min-height:76px; resize:vertical}
       dose: Number($('#dose').value||0),
       water: Number($('#water').value||0),
       temp: Number($('#temp').value||0),
+      iced: $('#iced').checked,
       recipe: $('#recipe').value||'',
       notes: $('#notes').value||'',
       oneLiner: $('#one').value||'',
       tds: Number($('#tds').value||0) || null,
       beverage: Number($('#bev').value||0) || null,
-      selectedNotes: Array.from(($('#notePicker')||document.createElement('div')).querySelectorAll('.chip.selected')).map(x=>x.dataset.note)
+      selectedNotes: Array.from(($('#entryNotePicker')||document.createElement('div')).querySelectorAll('.chip.selected')).map(x=>x.dataset.note)
     };
     if(e.tds!=null && e.beverage!=null && e.dose){ e.ey = Math.round((e.tds * e.beverage / e.dose)*10)/10; }
     e.costPerBrew = e.price && e.unit ? Math.round((e.price/e.unit)*e.dose) : 0;
@@ -621,6 +691,9 @@ textarea{min-height:76px; resize:vertical}
   $('#smartPaste').onclick = smartPaste;
   $('#statsBtn').onclick = openStats; $('#statsFab').onclick = openStats; $('#closeStats').onclick = closeStats;
   $('#methodFilter').onchange = renderEntries;
+  $('#name').onblur = ()=>{ detectCountryFromName(); fetchInfo(); };
+  $('#variety').onblur = fetchInfo;
+  $('#process').onblur = fetchInfo;
   // Modals
   $('#newEntryFab').onclick = ()=> openEntryModal();
   $('#closeEntry').onclick = closeEntryModal;
