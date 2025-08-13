@@ -5,16 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>나의 커피 기록장 5.0 — 기록 중심 뷰 & 모달 입력</title>
 <style>
-/* 기본 색상을 네이비 톤으로 복원 */
-:root{
-  --bg:#0e1117; --panel:#141926; --ink:#e9eef6; --muted:#a5b1c2; --line:#242b3a;
-  --accent:#73e7ff; --accent2:#a7a6ff; --ok:#82f7a0; --warn:#ffd073; --danger:#ff7b7b;
+  :root{
+  --bg:#2b2b2b; --panel:#3a3a3a; --ink:#f2f2f2; --muted:#a6a6a6; --line:#4a4a4a;
+  --accent:#8c8c8c; --accent2:#b5b5b5; --ok:#82f7a0; --warn:#ffd073; --danger:#ff7b7b;
 }
 *{box-sizing:border-box}
 html,body{height:100%}
-body{margin:0; background:linear-gradient(180deg,#0e1117,#0b0e15 70%); color:var(--ink); font-family: ui-sans-serif, -apple-system, "Apple SD Gothic Neo","Noto Sans KR",Segoe UI, Roboto, Helvetica, Arial}
+body{margin:0; background:linear-gradient(180deg,#2b2b2b,#1e1e1e 70%); color:var(--ink); font-family: ui-sans-serif, -apple-system, "Apple SD Gothic Neo","Noto Sans KR",Segoe UI, Roboto, Helvetica, Arial}
 .app{display:flex; height:100%}
-.sidebar{width:320px; min-width:280px; border-right:1px solid var(--line); display:flex; flex-direction:column; background:linear-gradient(180deg,#121625,#0f1420)}
+.sidebar{width:320px; min-width:280px; border-right:1px solid var(--line); display:flex; flex-direction:column; background:linear-gradient(180deg,#3a3a3a,#2b2b2b)}
 .brand{display:flex; align-items:center; gap:10px; padding:16px; border-bottom:1px solid var(--line)}
 .logo{width:28px;height:28px;border-radius:8px;background:
   radial-gradient(circle at 30% 30%,var(--accent),transparent 60%),
@@ -40,22 +39,22 @@ body{margin:0; background:linear-gradient(180deg,#0e1117,#0b0e15 70%); color:var
 .btn.danger{background:#2a1418; border-color:#3d2026; color:#ffd7dc}
 .main{flex:1; display:flex; flex-direction:column; min-width:0}
 .top{display:flex; flex-wrap:wrap; align-items:center; gap:10px; padding:14px 16px; border-bottom:1px solid var(--line)}
-.pill{display:inline-flex; gap:8px; align-items:center; padding:6px 10px; border:1px solid var(--line); border-radius:999px; font-size:12px; background:#0f1520}
+.pill{display:inline-flex; gap:8px; align-items:center; padding:6px 10px; border:1px solid var(--line); border-radius:999px; font-size:12px; background:#2e2e2e}
 .dot{width:8px;height:8px;border-radius:50%;background:var(--accent)}
 .crumb{font-size:13px;color:var(--muted)}
 .crumb b{color:var(--ink)}
 .entries{padding:14px; overflow:auto}
-.entry{border:1px solid var(--line); background:linear-gradient(180deg,#121827,#0e1422); border-radius:14px; margin:10px 0; padding:12px}
+.entry{border:1px solid var(--line); background:linear-gradient(180deg,#2f2f2f,#242424); border-radius:14px; margin:10px 0; padding:12px}
 .entry .row{display:grid; grid-template-columns:repeat(6,1fr); gap:8px}
 .entry .row + .row{margin-top:8px}
 .entry .row > div{min-width:0}
 .meta{color:var(--muted); font-size:12px}
 .cost{color:#d8f9ff; font-weight:700}
 .empty{color:var(--muted); text-align:center; padding:20px}
-.tag{font-size:11px; color:#cfe7ff; border:1px solid #223448; padding:2px 6px; border-radius:10px}
-.statpill{display:inline-block; padding:3px 8px; border:1px solid #28405a; border-radius:999px; font-size:12px; color:#d7efff}
-.badge{display:inline-flex; align-items:center; gap:6px; padding:4px 8px; border-radius:999px; border:1px solid #24344a; background:#0f1824; font-size:12px; color:#cde8ff}
-.badge .d{font-weight:700; color:#bfe7ff}
+.tag{font-size:11px; color:#e0e0e0; border:1px solid #4a4a4a; padding:2px 6px; border-radius:10px}
+.statpill{display:inline-block; padding:3px 8px; border:1px solid #5a5a5a; border-radius:999px; font-size:12px; color:#e0e0e0}
+.badge{display:inline-flex; align-items:center; gap:6px; padding:4px 8px; border-radius:999px; border:1px solid #5a5a5a; background:#3a3a3a; font-size:12px; color:#f2f2f2}
+.badge .d{font-weight:700; color:#fff}
 .filterbar{display:flex; align-items:center; gap:8px; padding:8px 16px; flex-wrap:wrap; border-bottom:1px solid var(--line)}
 .right{text-align:right}
 .tools{display:flex; gap:6px; flex-wrap:wrap}
@@ -336,8 +335,7 @@ textarea{min-height:76px; resize:vertical}
     while(colors.length<3) colors.push(colors[colors.length-1]);
     return `linear-gradient(90deg, ${colors[0]}, ${colors[1]}, ${colors[2]})`;
   }
-
-  function renderNotePicker(selected=[], el='coffeeNotePicker'){
+   function renderNotePicker(selected=[], el='coffeeNotePicker'){
     const box = document.getElementById(el); if(!box) return;
     box.innerHTML='';
     NOTE_LIST.forEach(n=>{
